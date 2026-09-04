@@ -31,10 +31,14 @@
 
     <div class="public-controls" style="text-align:center;padding:20px;background:#f4f4f4;">
       <div class="env-display" style="margin-bottom:8px;font-weight:600;">Environment: <span id="env-value">%REACT_APP_ENVIRONMENT%</span></div>
-      <nav style="display:flex;gap:16px;justify-content:center;">
+      <nav style="display:flex;gap:16px;justify-content:center;margin-bottom:20px;">
         <button id="get-photos" type="button">Get Photos</button>
         <button id="get-metadata" type="button">Get Metadata</button>
       </nav>
+      <div id="response-container" style="margin-top:20px;padding:15px;background:white;border-radius:5px;min-height:50px;max-height:400px;overflow-y:auto;border:1px solid #ddd;display:none;">
+        <h3 style="margin-top:0;">Response:</h3>
+        <pre id="response-content" style="background:#f9f9f9;padding:10px;border-radius:3px;white-space:pre-wrap;word-wrap:break-word;"></pre>
+      </div>
     </div>
 
     <div id="root"></div>
@@ -52,13 +56,19 @@
         function getMetadata(e){
           e.preventDefault();
           var url = 'http://' + gw + '/';
+          var container = document.getElementById('response-container');
+          var content = document.getElementById('response-content');
+          
+          content.textContent = 'Loading...';
+          container.style.display = 'block';
+          
           fetch(url)
             .then(function(response){ return response.text(); })
             .then(function(data){
-              alert('Metadata from ' + url + ':\n\n' + data);
+              content.textContent = data;
             })
             .catch(function(err){
-              alert('Error fetching metadata from ' + url + ':\n\n' + err.message);
+              content.textContent = 'Error: ' + err.message + '\n\nFailed to fetch from ' + url;
             });
         }
         
