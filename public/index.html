@@ -28,7 +28,49 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+
+    <div class="public-controls" style="text-align:center;padding:20px;background:#f4f4f4;">
+      <div class="env-display" style="margin-bottom:8px;font-weight:600;">Environment: <span id="env-value">%REACT_APP_ENVIRONMENT%</span></div>
+      <nav style="display:flex;gap:16px;justify-content:center;">
+        <button id="get-photos" type="button">Get Photos</button>
+        <button id="get-metadata" type="button">Get Metadata</button>
+      </nav>
+    </div>
+
     <div id="root"></div>
+
+    <script>
+      (function(){
+        var env = "%REACT_APP_ENVIRONMENT%";
+        var gw = "%REACT_APP_GATEWAY_IP%";
+        
+        function getPhotos(e){
+          e.preventDefault();
+          alert('Getting photos from ' + gw + ' in ' + env + ' environment');
+        }
+        
+        function getMetadata(e){
+          e.preventDefault();
+          var url = 'http://' + gw + '/';
+          fetch(url)
+            .then(function(response){ return response.text(); })
+            .then(function(data){
+              alert('Metadata from ' + url + ':\n\n' + data);
+            })
+            .catch(function(err){
+              alert('Error fetching metadata from ' + url + ':\n\n' + err.message);
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', function(){
+          var p = document.getElementById('get-photos');
+          var m = document.getElementById('get-metadata');
+          if(p) p.addEventListener('click', getPhotos);
+          if(m) m.addEventListener('click', getMetadata);
+        });
+      })();
+    </script>
+
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
